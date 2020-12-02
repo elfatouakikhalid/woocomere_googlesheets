@@ -1,0 +1,52 @@
+//this is a function that fires when the webapp receives a GET request
+  function doGet(e) {
+    return HtmlService.createHtmlOutput("request received");
+  }
+  //this is a function that fires when the webapp receives a POST request
+  function doPost(e) {
+    /*var i;
+    var myData = JSON.parse([e.postData.contents]);
+    for(i=0;i<myData.line_items.length;i++){
+      var order_number = myData.number;
+      var order_created = myData.date_created;
+      var order_status = myData.status;
+      var full_name=myData.billing.first_name;
+      var product_name= myData.line_items[i].name;
+      var product_qty= myData.line_items[i].quantity;
+      var product_total= myData.line_items[i].total;
+      var billing_email= myData.billing.email;
+      var billing_phone=myData.billing.phone;
+      var row=[order_number,full_name,product_name,product_qty,product_total,order_created,order_status,billing_email,billing_phone];
+      var sheet = SpreadsheetApp.getActiveSheet();
+      sheet.appendRow(row);*/
+    var myData = JSON.parse([e.postData.contents]);
+    var order_number = myData.number;
+    var order_created = myData.date_created;
+    var order_status = myData.status;
+    var full_name=myData.billing.first_name;
+    var billing_email= myData.billing.email;
+    var billing_phone=myData.billing.phone;
+    var row =[order_number,order_created,order_status,full_name,billing_email,billing_phone];
+    var product_name,product_id,product_price,product_quantity,product_total,i,j,color,size,variation,meta_data;
+    for(i=0;i<myData.line_items.length;i++){
+      product_name=myData.line_items[i].name;
+      product_id=myData.line_items[i].id;
+      product_price=myData.line_items[i].price;
+      product_quantity=myData.line_items[i].quantity;
+      product_total=myData.line_items[i].total;
+      meta_data=myData.line_items[i].meta_data;
+      for(j=0;j<meta_data.length;j++){
+                    if(meta_data[j].key=="color") color=meta_data[j].value;
+                    if(meta_data[j].key=="size") size=meta_data[j].value;
+                    variation=color+" | "+size;
+      }
+////      var metaData=myData.line_items[i].meta_data;
+//      for(j=0;i<myData.line_items[i].meta_data[j].length;j++){
+//          color="vv";
+//          size="bb";
+//      } 
+      row.push(product_name,product_id,product_price,product_quantity,product_total,variation);
+    }
+    var sheet = SpreadsheetApp.getActiveSheet();
+    sheet.appendRow(row);
+  }
